@@ -37,12 +37,10 @@
 @interface ViewController () <UITextViewDelegate>
 @property (readonly, nonatomic, strong) UITextView *textView;
 @property (readonly, nonatomic, strong) UITextView *summaryView;
-@property (readonly, nonatomic, strong) KxSummarizerConf *config;
 @end
 
 @implementation ViewController {
     
-    KxSummarizerConf *_config;
     NSString *_stopwordsName;
     NSString *_textName;
 }
@@ -137,7 +135,8 @@
     if (!_summaryView.hidden && !_summaryView.hasText) {
         
         NSString *text = _textView.text;
-        KxSummarizerConf *config = self.config;
+        KxSummarizerParams *params = [KxSummarizerParams new];
+        NSSet *stopwords = self.stopwords;
         
         __weak __typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -146,7 +145,10 @@
             
             NSArray *keywords;
             NSArray *sentences = [KxSummarizerExtractor runText:text
-                                                         config:config
+                                                          range:NSMakeRange(0, text.length)
+                                                       sampling:0.1
+                                                         params:params
+                                                      stopwords:stopwords
                                                        keywords:&keywords];
             
             ts = [NSDate timeIntervalSinceReferenceDate] - ts;
@@ -197,20 +199,13 @@
     _summaryView.text = ms;
 }
 
-- (KxSummarizerConf *)config
+- (NSSet *)stopwords
 {
-    if (!_config) {
-        
-        NSString *path = [[NSBundle mainBundle] pathForResource:_stopwordsName ofType:@""];
-        NSString *stopwordsText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-        NSArray *stopwordsArray = [stopwordsText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        NSSet *stopwords = [NSSet setWithArray:stopwordsArray];
-        
-        _config = [[KxSummarizerConf alloc] initWithSamling:0.1
-                                                  stopwords:stopwords
-                                                     params:nil];
-    }
-    return _config;
+    NSString *path = [[NSBundle mainBundle] pathForResource:_stopwordsName ofType:@""];
+    NSString *stopwordsText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    NSArray *stopwordsArray = [stopwordsText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    return [NSSet setWithArray:stopwordsArray];
+ 
 }
 
 - (void) updateRightBarButton

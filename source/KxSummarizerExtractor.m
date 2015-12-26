@@ -33,12 +33,11 @@
 
 
 #import "KxSummarizerExtractor.h"
-#import "KxSummarizerConf.h"
 #import "KxSummarizerParams.h"
 #import "KxSummarizerKeyword.h"
 #import "KxSummarizerSentence.h"
-#import "KxSummarizerText.h"
-#import "NSString+KxSummarizer.h"
+#import "KxSummarizerKeyword+Edit.h"
+#import "KxSummarizerSentence+Edit.h"
 
 //////////
 
@@ -51,45 +50,43 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
 
 //////////
 
-@interface KxSummarizerKeyword()
-@property (readwrite, nonatomic) NSUInteger count;
-@property (readwrite, nonatomic) float score;
-@property (readwrite, nonatomic) float extraFactor;
-@property (readwrite, nonatomic) BOOL occurred;
-@property (readwrite, nonatomic) BOOL off;
-@end
-
-@interface KxSummarizerSentence()
-@property (readwrite, nonatomic) NSUInteger textNo;
-@property (readwrite, nonatomic) float progress;
-@property (readwrite, nonatomic) float score;
-@end
-
-//////////
-
 @implementation KxSummarizerExtractor
 
 + (NSArray *) runText:(NSString *)text
-               config:(KxSummarizerConf *)config
+            stopwords:(NSSet *)stopwords
              keywords:(NSArray **)keywords
 {
     return [self runText:text
                    range:NSMakeRange(0, text.length)
-                  config:config
+                sampling:0
+                  params:nil
+               stopwords:stopwords
                 keywords:keywords];
 }
 
 + (NSArray *) runText:(NSString *)text
                 range:(NSRange)range
-               config:(KxSummarizerConf *)config
+             sampling:(float)sampling
+               params:(KxSummarizerParams *)params
+            stopwords:(NSSet *)stopwords
              keywords:(NSArray **)outKeywords
 {
-    KxSummarizerParams *params = config.params;
+    if (!text.length) {
+        return nil;
+    }
+    if (sampling <= 0) {
+        sampling = 0.2;
+    }
+    if (!params) {
+        params = [KxSummarizerParams new];
+    }
+    
     NSMutableDictionary *keywordCache = [NSMutableDictionary dictionary];
     
     NSArray *sentences = [KxSummarizerSentence buildSentences:text
                                                         range:range
-                                                       config:config
+                                                       params:params
+                                                    stopwords:stopwords
                                                      excluded:nil
                                                       ltagger:self.linguisticTagger
                                                      keywords:keywordCache];
@@ -101,115 +98,11 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
             *outKeywords = keywords;
         }
         
-        [KxSummarizerExtractor scoreSentences:sentences params:params];
-        return [KxSummarizerExtractor topSentences:sentences
-                                            params:params
-                                           maxSize:text.length * config.sampling];
+        sentences = [KxSummarizerExtractor scoreSentences:sentences params:params];
+        return [KxSummarizerExtractor topSentences:sentences maxSize:text.length * sampling];
     }
     
     return nil;
-}
-
-+ (NSArray *) runTexts:(NSArray *)texts
-                config:(KxSummarizerConf *)config
-              keywords:(NSArray **)outKeywords
-              progress:(BOOL(^)(float))progressBlock
-{
-    KxSummarizerParams *params = config.params;
-    NSMutableDictionary *keywordCache = [NSMutableDictionary dictionary];
-    NSMutableArray *allSentences = [NSMutableArray arrayWithCapacity:texts.count];
-    
-    NSUInteger contentLen = 0, totalContentLen = 0;
-    for (KxSummarizerText *text in texts) {
-        totalContentLen += text.content.length;
-    }
-    
-    NSLinguisticTagger *ltagger = self.linguisticTagger;
-    
-    // build keywords
-    
-    float progress = 0;
-    NSUInteger index = 0;
-    
-    for (KxSummarizerText *text in texts) {
-        
-        if (text.title.length) {
-            
-            NSArray *words = [KxSummarizerWord buildWords:text.title
-                                                   config:config
-                                                  ltagger:ltagger
-                                                 keywords:keywordCache
-                                               totalCount:NULL];
-            
-            for (KxSummarizerWord *word in words) {
-                word.keyword.extraFactor = 3.;
-            }
-        }
-        
-        NSArray *sentences = [KxSummarizerSentence buildSentences:text.content
-                                                            range:NSMakeRange(0, text.content.length)
-                                                           config:config
-                                                         excluded:text.title.summarizer_splitOnSentences
-                                                          ltagger:ltagger
-                                                         keywords:keywordCache];
-        
-        const float progress0 = progress;
-        contentLen += text.content.length;
-        progress = (float)contentLen / (float)totalContentLen;
-        
-        for (KxSummarizerSentence *sentence in sentences) {
-            
-            sentence.textNo = index;
-            sentence.progress = progress0 + (progress - progress0) * sentence.progress;
-            
-            if (text.factor) {
-                for (KxSummarizerWord *word in sentence.words) {
-                    word.keyword.extraFactor = text.factor;
-                }
-            }
-        }
-        
-        [allSentences addObjectsFromArray:sentences];
-        
-        if (progressBlock &&
-            !progressBlock(progress))
-        {
-            return nil;
-        }
-        
-        index += 1;
-    }
-    
-    // summarize
-    
-    if (allSentences.count) {
-        
-        NSArray *keywords = [KxSummarizerExtractor scoreKeywords:keywordCache.allValues params:params];
-        if (outKeywords) {
-            *outKeywords = keywords;
-        }
-        
-        [KxSummarizerExtractor scoreSentences:allSentences params:params];
-        return [KxSummarizerExtractor topSentences:allSentences
-                                            params:params
-                                           maxSize:totalContentLen * config.sampling];
-    }
-    
-    return nil;
-}
-
-#pragma mark - private
-
-+ (NSLinguisticTagger *) linguisticTagger
-{    
-    const NSLinguisticTaggerOptions options = NSLinguisticTaggerOmitWhitespace|NSLinguisticTaggerOmitOther|NSLinguisticTaggerOmitPunctuation;
-    
-    NSArray *tagSchemes = @[NSLinguisticTagSchemeLemma,
-                            NSLinguisticTagSchemeLexicalClass,
-                            NSLinguisticTagSchemeNameType,
-                            NSLinguisticTagSchemeTokenType];
-    
-    return [[NSLinguisticTagger alloc] initWithTagSchemes:tagSchemes options:options];
 }
 
 + (NSArray *) scoreKeywords:(NSArray *)keywords
@@ -247,8 +140,8 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
     return keywords;
 }
 
-+ (void) scoreSentences:(NSArray *)sentences
-                 params:(KxSummarizerParams *)params
++ (NSArray *) scoreSentences:(NSArray *)sentences
+                      params:(KxSummarizerParams *)params
 {
     const BOOL doAdjacent = params.adjacentKeywordsFactor > 0 && sentences.count > 1;
     
@@ -278,10 +171,11 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
         i += 1;
         prev = sentence;
     }
+    
+    return sentences;
 }
 
 + (NSArray *) topSentences:(NSArray *)sentences
-                    params:(KxSummarizerParams *)params
                    maxSize:(NSUInteger)maxSize
 {
     sentences = [sentences sortedArrayUsingSelector:@selector(compareByScore:)];
@@ -298,7 +192,19 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
     
     return top;
 }
- 
+
++ (NSLinguisticTagger *) linguisticTagger
+{
+    const NSLinguisticTaggerOptions options = NSLinguisticTaggerOmitWhitespace|NSLinguisticTaggerOmitOther|NSLinguisticTaggerOmitPunctuation;
+    
+    NSArray *tagSchemes = @[NSLinguisticTagSchemeLemma,
+                            NSLinguisticTagSchemeLexicalClass,
+                            NSLinguisticTagSchemeNameType,
+                            NSLinguisticTagSchemeTokenType];
+    
+    return [[NSLinguisticTagger alloc] initWithTagSchemes:tagSchemes options:options];
+}
+
 @end
 
 #pragma mark - utils

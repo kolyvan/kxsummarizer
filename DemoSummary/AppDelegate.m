@@ -34,6 +34,8 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <KxSummarizer/KxSummarizer.h>
+#import "KxDemoSummaryText.h"
+#import "NSString+KxDemoSummary.h"
 
 @interface AppDelegate ()
 @end
@@ -47,7 +49,7 @@
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     
-    //[self testRunTexts];
+    [self runTexts];
     
     return YES;
 }
@@ -67,7 +69,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
 }
 
-- (void) testRunTexts
+- (void) runTexts
 {    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"en-stopwords" ofType:@""];
     NSString *stopwordsText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
@@ -80,30 +82,115 @@
     
     NSString *text2 = @"He who gives himself entirely to his fellow-men appears to them useless and selfish; but he who gives himself partially to them is pronounced a benefactor and philanthropist.\nHow does it become a man to behave toward this American government today? I answer, that he cannot without disgrace be associated with it. I cannot for an instant recognize that political organization as my government which is the slave's government also.\nAll men recognize the right of revolution; that is, the right to refuse allegiance to, and to resist, the government, when its tyranny or its inefficiency are great and unendurable. But almost all say that such is not the case now. But such was the case, they think, in the Revolution Of '75. If one were to tell me that this was a bad government because it taxed certain foreign commodities brought to its ports, it is most probable that I should not make an ado about it, for I can do without them. All machines have their friction; and possibly this does enough good to counterbalance the evil. At any rate, it is a great evil to make a stir about it. But when the friction comes to have its machine, and oppression and robbery are organized, I say, let us not have such a machine any longer. In other words, when a sixth of the population of a nation which has undertaken to be the refuge of liberty are slaves, and a whole country is unjustly overrun and conquered by a foreign army, and subjected to military law, I think that it is not too soon for honest men to rebel and revolutionize. What makes this duty the more urgent is the fact that the country so overrun is not our own, but ours is the invading army.\nPaley, a common authority with many on moral questions, in his chapter on the \"Duty of Submission to Civil Government,\" resolves all civil obligation into expediency; and he proceeds to say that \"so long as the interest of the whole society requires it, that is, so long as the established government cannot be resisted or changed without public inconveniency, it is the will of God... that the established government be obeyed- and no longer. This principle being admitted, the justice of every particular case of resistance is reduced to a computation of the quantity of the danger and grievance on the one side, and of the probability and expense of redressing it on the other.\"\nOf this, he says, every man shall judge for himself. But Paley appears never to have contemplated those cases to which the rule of expediency does not apply, in which a people, as well as an individual, must do justice, cost what it may. If I have unjustly wrested a plank from a drowning man, I must restore it to him though I drown myself. This, according to Paley, would be inconvenient. But he that would save his life, in such a case, shall lose it. This people must cease to hold slaves, and to make war on Mexico, though it cost them their existence as a people.";
     
-    KxSummarizerConf *config = [[KxSummarizerConf alloc] initWithSamling:0.2
-                                                               stopwords:stopwords
-                                                                  params:nil];
-    
-    
     NSArray *texts = @[
-                       [[KxSummarizerText alloc] initWithTitle:@"Civil Disobedience" content:text factor:0],
-                       [[KxSummarizerText alloc] initWithTitle:nil content:text1 factor:0.],
-                       [[KxSummarizerText alloc] initWithTitle:nil content:text2 factor:0.],
+                       [[KxDemoSummaryText alloc] initWithTitle:@"Civil Disobedience" content:text factor:0],
+                       [[KxDemoSummaryText alloc] initWithTitle:nil content:text1 factor:0.],
+                       [[KxDemoSummaryText alloc] initWithTitle:nil content:text2 factor:0.],
                        ];
     
     NSArray *keywords;
    
-    NSArray *sentences = [KxSummarizerExtractor runTexts:texts
-                                                  config:config
-                                                keywords:&keywords
-                                                progress:^BOOL(float progress) {
-                                                    NSLog(@"process: %.2f", progress);
-                                                    return YES;
-                                                }];
-    
+    NSArray *sentences = [AppDelegate runTexts:texts
+                                      sampling:0.2
+                                        params:[KxSummarizerParams new]
+                                     stopwords:stopwords
+                                      keywords:&keywords
+                                      progress:^BOOL(float progress) {
+                                          NSLog(@"process: %.2f", progress);
+                                          return YES;
+                                      }];
     
     NSLog(@"%@", sentences);
     NSLog(@"%@", [keywords sortedArrayUsingSelector:@selector(compareByScore:)]);
+}
+
++ (NSArray *) runTexts:(NSArray *)texts
+              sampling:(float)sampling
+                params:(KxSummarizerParams *)params
+             stopwords:(NSSet *)stopwords
+              keywords:(NSArray **)outKeywords
+              progress:(BOOL(^)(float))progressBlock
+{
+    NSMutableDictionary *keywordCache = [NSMutableDictionary dictionary];
+    NSMutableArray *allSentences = [NSMutableArray arrayWithCapacity:texts.count];
+    
+    NSUInteger contentLen = 0, totalContentLen = 0;
+    for (KxDemoSummaryText *text in texts) {
+        totalContentLen += text.content.length;
+    }
+    
+    NSLinguisticTagger *ltagger = [KxSummarizerExtractor linguisticTagger];
+    
+    // build keywords
+    
+    float progress = 0;
+    NSUInteger index = 0;
+    
+    for (KxDemoSummaryText *text in texts) {
+        
+        if (text.title.length) {
+            
+            NSArray *words = [KxSummarizerWord buildWords:text.title
+                                                   params:params
+                                                stopwords:stopwords
+                                                  ltagger:ltagger
+                                                 keywords:keywordCache
+                                               totalCount:NULL];
+            
+            for (KxSummarizerWord *word in words) {
+                word.keyword.extraFactor = 3.;
+            }
+        }
+        
+        NSArray *sentences = [KxSummarizerSentence buildSentences:text.content
+                                                            range:NSMakeRange(0, text.content.length)
+                                                           params:params
+                                                        stopwords:stopwords
+                                                         excluded:text.title.splitOnSentences
+                                                          ltagger:ltagger
+                                                         keywords:keywordCache];
+        
+        const float progress0 = progress;
+        contentLen += text.content.length;
+        progress = (float)contentLen / (float)totalContentLen;
+        
+        for (KxSummarizerSentence *sentence in sentences) {
+            
+            sentence.textNo = index;
+            sentence.progress = progress0 + (progress - progress0) * sentence.progress;
+            
+            if (text.factor) {
+                for (KxSummarizerWord *word in sentence.words) {
+                    word.keyword.extraFactor = text.factor;
+                }
+            }
+        }
+        
+        [allSentences addObjectsFromArray:sentences];
+        
+        if (progressBlock &&
+            !progressBlock(progress))
+        {
+            return nil;
+        }
+        
+        index += 1;
+    }
+    
+    // summarize
+    
+    if (allSentences.count) {
+        
+        NSArray *keywords = [KxSummarizerExtractor scoreKeywords:keywordCache.allValues params:params];
+        if (outKeywords) {
+            *outKeywords = keywords;
+        }
+        
+        NSArray *sentences = [KxSummarizerExtractor scoreSentences:allSentences params:params];
+        return [KxSummarizerExtractor topSentences:sentences maxSize:totalContentLen * sampling];
+    }
+    
+    return nil;
 }
 
 @end

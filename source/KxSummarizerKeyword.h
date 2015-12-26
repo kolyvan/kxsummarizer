@@ -45,7 +45,7 @@ typedef NS_ENUM(UInt8, KxSummarizerPartOfSpeech) {
     KxSummarizerPartOfSpeechNumber,  
 };
 
-@class KxSummarizerConf;
+@class KxSummarizerParams;
 
 @interface KxSummarizerKeyword : NSObject
 @property (readonly, nonatomic) NSUInteger count;
@@ -65,7 +65,8 @@ typedef NS_ENUM(UInt8, KxSummarizerPartOfSpeech) {
 @property (readonly, nonatomic) BOOL isUppercase;
 
 + (NSArray *) buildWords:(NSString *)text
-                  config:(KxSummarizerConf *)config
+                  params:(KxSummarizerParams *)params
+               stopwords:(NSSet *)stopwords
                  ltagger:(NSLinguisticTagger *)ltagger
                 keywords:(NSMutableDictionary *)keywords
               totalCount:(NSUInteger *)totalCount;          // total word's count in sentence

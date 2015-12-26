@@ -14,13 +14,11 @@ FOUNDATION_EXPORT double KxSummarizerVersionNumber;
 //! Project version string for KxSummarizer.
 FOUNDATION_EXPORT const unsigned char KxSummarizerVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <KxSummarizer/PublicHeader.h>
-
 
 #import <KxSummarizer/KxSummarizerExtractor.h>
-#import <KxSummarizer/KxSummarizerConf.h>
 #import <KxSummarizer/KxSummarizerParams.h>
 #import <KxSummarizer/KxSummarizerKeyword.h>
 #import <KxSummarizer/KxSummarizerSentence.h>
-#import <KxSummarizer/KxSummarizerText.h>
+#import <KxSummarizer/KxSummarizerKeyword+Edit.h>
+#import <KxSummarizer/KxSummarizerSentence+Edit.h>
 

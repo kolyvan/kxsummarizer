@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F936F5EF1C2E6E3200CF002B /* KxSummarizerKeyword+Edit.h in Headers */ = {isa = PBXBuildFile; fileRef = F936F5EE1C2E6E2600CF002B /* KxSummarizerKeyword+Edit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F936F5F11C2E6E9500CF002B /* KxSummarizerSentence+Edit.h in Headers */ = {isa = PBXBuildFile; fileRef = F936F5F01C2E6E9500CF002B /* KxSummarizerSentence+Edit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F936F5F41C2E6F6B00CF002B /* NSString+KxDemoSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = F936F5F21C2E6F6B00CF002B /* NSString+KxDemoSummary.m */; };
+		F936F5F71C2E700700CF002B /* KxDemoSummaryText.m in Sources */ = {isa = PBXBuildFile; fileRef = F936F5F51C2E700700CF002B /* KxDemoSummaryText.m */; };
 		F9BC51C91C2D20BD001B494C /* ru-stopwords in Resources */ = {isa = PBXBuildFile; fileRef = F9BC51C71C2D20BD001B494C /* ru-stopwords */; };
 		F9BC51CA1C2D20BD001B494C /* en-stopwords in Resources */ = {isa = PBXBuildFile; fileRef = F9BC51C81C2D20BD001B494C /* en-stopwords */; };
 		F9BC51CE1C2D24A7001B494C /* KxSummarizerKeyword.h in Headers */ = {isa = PBXBuildFile; fileRef = F9BC51CB1C2D242E001B494C /* KxSummarizerKeyword.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9BC51CF1C2D24AC001B494C /* KxSummarizerKeyword.m in Sources */ = {isa = PBXBuildFile; fileRef = F9BC51CC1C2D242E001B494C /* KxSummarizerKeyword.m */; };
-		F9BC51D21C2D3386001B494C /* NSString+KxSummarizer.h in Headers */ = {isa = PBXBuildFile; fileRef = F9BC51D01C2D3386001B494C /* NSString+KxSummarizer.h */; };
-		F9BC51D31C2D3386001B494C /* NSString+KxSummarizer.m in Sources */ = {isa = PBXBuildFile; fileRef = F9BC51D11C2D3386001B494C /* NSString+KxSummarizer.m */; };
 		F9BC51D51C2D5103001B494C /* sample.txt in Resources */ = {isa = PBXBuildFile; fileRef = F9BC51D41C2D5103001B494C /* sample.txt */; };
 		F9BC51D71C2D5341001B494C /* sample-ru.txt in Resources */ = {isa = PBXBuildFile; fileRef = F9BC51D61C2D5341001B494C /* sample-ru.txt */; };
 		F9BC51D91C2D5967001B494C /* sample2-ru.txt in Resources */ = {isa = PBXBuildFile; fileRef = F9BC51D81C2D5967001B494C /* sample2-ru.txt */; };
-		F9BC51DC1C2D5C95001B494C /* KxSummarizerText.h in Headers */ = {isa = PBXBuildFile; fileRef = F9BC51DA1C2D5C95001B494C /* KxSummarizerText.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F9BC51DD1C2D5C95001B494C /* KxSummarizerText.m in Sources */ = {isa = PBXBuildFile; fileRef = F9BC51DB1C2D5C95001B494C /* KxSummarizerText.m */; };
 		F9D432FF1C2BDFE400BAB6AE /* KxSummarizer.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D432FE1C2BDFE400BAB6AE /* KxSummarizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9D4330F1C2BE01B00BAB6AE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D4330E1C2BE01B00BAB6AE /* main.m */; };
 		F9D433121C2BE01B00BAB6AE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D433111C2BE01B00BAB6AE /* AppDelegate.m */; };
@@ -29,8 +29,6 @@
 		F9D433261C2BE09D00BAB6AE /* KxSummarizer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F9D432FB1C2BDFE400BAB6AE /* KxSummarizer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F9D433361C2BE0FA00BAB6AE /* KxSummarizerExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D433341C2BE0FA00BAB6AE /* KxSummarizerExtractor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9D433371C2BE0FA00BAB6AE /* KxSummarizerExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D433351C2BE0FA00BAB6AE /* KxSummarizerExtractor.m */; };
-		F9D4333A1C2BE37A00BAB6AE /* KxSummarizerConf.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D433381C2BE37A00BAB6AE /* KxSummarizerConf.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F9D4333B1C2BE37A00BAB6AE /* KxSummarizerConf.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D433391C2BE37A00BAB6AE /* KxSummarizerConf.m */; };
 		F9D4333E1C2BE3BC00BAB6AE /* KxSummarizerParams.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D4333C1C2BE3BC00BAB6AE /* KxSummarizerParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9D4333F1C2BE3BC00BAB6AE /* KxSummarizerParams.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D4333D1C2BE3BC00BAB6AE /* KxSummarizerParams.m */; };
 		F9D433421C2BE8A700BAB6AE /* KxSummarizerSentence.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D433401C2BE8A700BAB6AE /* KxSummarizerSentence.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,17 +60,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F936F5EE1C2E6E2600CF002B /* KxSummarizerKeyword+Edit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "KxSummarizerKeyword+Edit.h"; path = "source/KxSummarizerKeyword+Edit.h"; sourceTree = "<group>"; };
+		F936F5F01C2E6E9500CF002B /* KxSummarizerSentence+Edit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "KxSummarizerSentence+Edit.h"; path = "source/KxSummarizerSentence+Edit.h"; sourceTree = "<group>"; };
+		F936F5F21C2E6F6B00CF002B /* NSString+KxDemoSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+KxDemoSummary.m"; sourceTree = "<group>"; };
+		F936F5F31C2E6F6B00CF002B /* NSString+KxDemoSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+KxDemoSummary.h"; sourceTree = "<group>"; };
+		F936F5F51C2E700700CF002B /* KxDemoSummaryText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxDemoSummaryText.m; sourceTree = "<group>"; };
+		F936F5F61C2E700700CF002B /* KxDemoSummaryText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxDemoSummaryText.h; sourceTree = "<group>"; };
 		F9BC51C71C2D20BD001B494C /* ru-stopwords */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "ru-stopwords"; path = "resources/ru-stopwords"; sourceTree = "<group>"; };
 		F9BC51C81C2D20BD001B494C /* en-stopwords */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "en-stopwords"; path = "resources/en-stopwords"; sourceTree = "<group>"; };
 		F9BC51CB1C2D242E001B494C /* KxSummarizerKeyword.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxSummarizerKeyword.h; path = source/KxSummarizerKeyword.h; sourceTree = "<group>"; };
 		F9BC51CC1C2D242E001B494C /* KxSummarizerKeyword.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxSummarizerKeyword.m; path = source/KxSummarizerKeyword.m; sourceTree = "<group>"; };
-		F9BC51D01C2D3386001B494C /* NSString+KxSummarizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+KxSummarizer.h"; path = "source/NSString+KxSummarizer.h"; sourceTree = "<group>"; };
-		F9BC51D11C2D3386001B494C /* NSString+KxSummarizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+KxSummarizer.m"; path = "source/NSString+KxSummarizer.m"; sourceTree = "<group>"; };
 		F9BC51D41C2D5103001B494C /* sample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sample.txt; path = resources/sample.txt; sourceTree = "<group>"; };
 		F9BC51D61C2D5341001B494C /* sample-ru.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-ru.txt"; path = "resources/sample-ru.txt"; sourceTree = "<group>"; };
 		F9BC51D81C2D5967001B494C /* sample2-ru.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample2-ru.txt"; path = "resources/sample2-ru.txt"; sourceTree = "<group>"; };
-		F9BC51DA1C2D5C95001B494C /* KxSummarizerText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxSummarizerText.h; path = source/KxSummarizerText.h; sourceTree = "<group>"; };
-		F9BC51DB1C2D5C95001B494C /* KxSummarizerText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxSummarizerText.m; path = source/KxSummarizerText.m; sourceTree = "<group>"; };
 		F9D432FB1C2BDFE400BAB6AE /* KxSummarizer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KxSummarizer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9D432FE1C2BDFE400BAB6AE /* KxSummarizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KxSummarizer.h; sourceTree = "<group>"; };
 		F9D433001C2BDFE400BAB6AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -87,8 +87,6 @@
 		F9D4331E1C2BE01B00BAB6AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F9D433341C2BE0FA00BAB6AE /* KxSummarizerExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxSummarizerExtractor.h; path = source/KxSummarizerExtractor.h; sourceTree = "<group>"; };
 		F9D433351C2BE0FA00BAB6AE /* KxSummarizerExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxSummarizerExtractor.m; path = source/KxSummarizerExtractor.m; sourceTree = "<group>"; };
-		F9D433381C2BE37A00BAB6AE /* KxSummarizerConf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxSummarizerConf.h; path = source/KxSummarizerConf.h; sourceTree = "<group>"; };
-		F9D433391C2BE37A00BAB6AE /* KxSummarizerConf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxSummarizerConf.m; path = source/KxSummarizerConf.m; sourceTree = "<group>"; };
 		F9D4333C1C2BE3BC00BAB6AE /* KxSummarizerParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxSummarizerParams.h; path = source/KxSummarizerParams.h; sourceTree = "<group>"; };
 		F9D4333D1C2BE3BC00BAB6AE /* KxSummarizerParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KxSummarizerParams.m; path = source/KxSummarizerParams.m; sourceTree = "<group>"; };
 		F9D433401C2BE8A700BAB6AE /* KxSummarizerSentence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KxSummarizerSentence.h; path = source/KxSummarizerSentence.h; sourceTree = "<group>"; };
@@ -161,17 +159,13 @@
 				F9D433341C2BE0FA00BAB6AE /* KxSummarizerExtractor.h */,
 				F9D433351C2BE0FA00BAB6AE /* KxSummarizerExtractor.m */,
 				F9BC51CB1C2D242E001B494C /* KxSummarizerKeyword.h */,
+				F936F5EE1C2E6E2600CF002B /* KxSummarizerKeyword+Edit.h */,
 				F9BC51CC1C2D242E001B494C /* KxSummarizerKeyword.m */,
 				F9D433401C2BE8A700BAB6AE /* KxSummarizerSentence.h */,
+				F936F5F01C2E6E9500CF002B /* KxSummarizerSentence+Edit.h */,
 				F9D433411C2BE8A700BAB6AE /* KxSummarizerSentence.m */,
-				F9D433381C2BE37A00BAB6AE /* KxSummarizerConf.h */,
-				F9D433391C2BE37A00BAB6AE /* KxSummarizerConf.m */,
 				F9D4333C1C2BE3BC00BAB6AE /* KxSummarizerParams.h */,
 				F9D4333D1C2BE3BC00BAB6AE /* KxSummarizerParams.m */,
-				F9BC51DA1C2D5C95001B494C /* KxSummarizerText.h */,
-				F9BC51DB1C2D5C95001B494C /* KxSummarizerText.m */,
-				F9BC51D01C2D3386001B494C /* NSString+KxSummarizer.h */,
-				F9BC51D11C2D3386001B494C /* NSString+KxSummarizer.m */,
 			);
 			name = source;
 			sourceTree = "<group>";
@@ -184,6 +178,10 @@
 				F9D433111C2BE01B00BAB6AE /* AppDelegate.m */,
 				F9D433131C2BE01B00BAB6AE /* ViewController.h */,
 				F9D433141C2BE01B00BAB6AE /* ViewController.m */,
+				F936F5F61C2E700700CF002B /* KxDemoSummaryText.h */,
+				F936F5F51C2E700700CF002B /* KxDemoSummaryText.m */,
+				F936F5F31C2E6F6B00CF002B /* NSString+KxDemoSummary.h */,
+				F936F5F21C2E6F6B00CF002B /* NSString+KxDemoSummary.m */,
 				F9D433191C2BE01B00BAB6AE /* Assets.xcassets */,
 				F9D4331B1C2BE01B00BAB6AE /* LaunchScreen.storyboard */,
 				F9D4331E1C2BE01B00BAB6AE /* Info.plist */,
@@ -207,14 +205,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F936F5EF1C2E6E3200CF002B /* KxSummarizerKeyword+Edit.h in Headers */,
 				F9D4333E1C2BE3BC00BAB6AE /* KxSummarizerParams.h in Headers */,
-				F9D4333A1C2BE37A00BAB6AE /* KxSummarizerConf.h in Headers */,
+				F936F5F11C2E6E9500CF002B /* KxSummarizerSentence+Edit.h in Headers */,
 				F9BC51CE1C2D24A7001B494C /* KxSummarizerKeyword.h in Headers */,
 				F9D433361C2BE0FA00BAB6AE /* KxSummarizerExtractor.h in Headers */,
-				F9BC51D21C2D3386001B494C /* NSString+KxSummarizer.h in Headers */,
 				F9D433421C2BE8A700BAB6AE /* KxSummarizerSentence.h in Headers */,
 				F9D432FF1C2BDFE400BAB6AE /* KxSummarizer.h in Headers */,
-				F9BC51DC1C2D5C95001B494C /* KxSummarizerText.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,11 +322,8 @@
 			files = (
 				F9D433371C2BE0FA00BAB6AE /* KxSummarizerExtractor.m in Sources */,
 				F9D433431C2BE8A700BAB6AE /* KxSummarizerSentence.m in Sources */,
-				F9BC51DD1C2D5C95001B494C /* KxSummarizerText.m in Sources */,
 				F9D4333F1C2BE3BC00BAB6AE /* KxSummarizerParams.m in Sources */,
-				F9BC51D31C2D3386001B494C /* NSString+KxSummarizer.m in Sources */,
 				F9BC51CF1C2D24AC001B494C /* KxSummarizerKeyword.m in Sources */,
-				F9D4333B1C2BE37A00BAB6AE /* KxSummarizerConf.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +334,8 @@
 				F9D433151C2BE01B00BAB6AE /* ViewController.m in Sources */,
 				F9D433121C2BE01B00BAB6AE /* AppDelegate.m in Sources */,
 				F9D4330F1C2BE01B00BAB6AE /* main.m in Sources */,
+				F936F5F71C2E700700CF002B /* KxDemoSummaryText.m in Sources */,
+				F936F5F41C2E6F6B00CF002B /* NSString+KxDemoSummary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,23 +33,31 @@
 
 #import <Foundation/Foundation.h>
 
-@class KxSummarizerConf;
+@class KxSummarizerParams;
 
 @interface KxSummarizerExtractor : NSObject
 
 + (NSArray *) runText:(NSString *)text
-               config:(KxSummarizerConf *)config
+            stopwords:(NSSet *)stopwords
              keywords:(NSArray **)keywords;
 
 + (NSArray *) runText:(NSString *)text
                 range:(NSRange)range
-               config:(KxSummarizerConf *)config
+             sampling:(float)sampling
+               params:(KxSummarizerParams *)params
+            stopwords:(NSSet *)stopwords
              keywords:(NSArray **)keywords;
 
-+ (NSArray *) runTexts:(NSArray *)texts
-                config:(KxSummarizerConf *)config
-              keywords:(NSArray **)keywords
-              progress:(BOOL(^)(float))progress;  // return NO for aborting
++ (NSArray *) scoreKeywords:(NSArray *)keywords
+                     params:(KxSummarizerParams *)params;
+
++ (NSArray *) scoreSentences:(NSArray *)sentences
+                      params:(KxSummarizerParams *)params;
+
++ (NSArray *) topSentences:(NSArray *)sentences
+                   maxSize:(NSUInteger)maxSize;
+
++ (NSLinguisticTagger *) linguisticTagger;
 
 @end
 

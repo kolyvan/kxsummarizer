@@ -46,7 +46,7 @@ typedef NS_OPTIONS(UInt8, KxSummarizerSentenceFlags) {
     KxSummarizerSentenceFlagColon           = 1 << 6,
 };
 
-@class KxSummarizerConf;
+@class KxSummarizerParams;
 
 @interface KxSummarizerSentence : NSObject
 @property (readonly, nonatomic) NSUInteger textNo;             // index of piece of text
@@ -64,7 +64,8 @@ typedef NS_OPTIONS(UInt8, KxSummarizerSentenceFlags) {
 
 + (NSArray *) buildSentences:(NSString *)text
                        range:(NSRange)range
-                      config:(KxSummarizerConf *)config
+                      params:(KxSummarizerParams *)params
+                   stopwords:(NSSet *)stopwords
                     excluded:(NSArray *)excluded
                      ltagger:(NSLinguisticTagger *)ltagger
                     keywords:(NSMutableDictionary *)keywords;

@@ -32,7 +32,6 @@
  */
 
 #import "KxSummarizerKeyword.h"
-#import "KxSummarizerConf.h"
 #import "KxSummarizerParams.h"
 
 //////////
@@ -88,14 +87,14 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
 @implementation KxSummarizerWord
 
 + (NSArray *) buildWords:(NSString *)text
-                  config:(KxSummarizerConf *)config
+                  params:(KxSummarizerParams *)params
+               stopwords:(NSSet *)stopwords
                  ltagger:(NSLinguisticTagger *)ltagger
                 keywords:(NSMutableDictionary *)keywords
               totalCount:(NSUInteger *)totalCount
 {
     NSMutableArray *words = [NSMutableArray array];
-    const NSUInteger minSize = config.params.minKeywordSize;
-    NSSet *stopwords = config.stopwords;
+    const NSUInteger minSize = params.minKeywordSize;
     NSCharacterSet *uppercaseLetters = [NSCharacterSet uppercaseLetterCharacterSet];
     NSCharacterSet *lowercaseLetters = [NSCharacterSet lowercaseLetterCharacterSet];
     __block NSUInteger index = 0;

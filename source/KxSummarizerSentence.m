@@ -32,7 +32,6 @@
  */
 
 #import "KxSummarizerSentence.h"
-#import "KxSummarizerConf.h"
 #import "KxSummarizerParams.h"
 #import "KxSummarizerKeyword.h"
 
@@ -62,12 +61,14 @@ static inline KxSummarizerSentenceFlags sentencesFlagsForString(NSString *string
 
 + (NSArray *) buildSentences:(NSString *)text
                        range:(NSRange)range
-                      config:(KxSummarizerConf *)config
+                      params:(KxSummarizerParams *)params
+                   stopwords:(NSSet *)stopwords
                     excluded:(NSArray *)excluded
                      ltagger:(NSLinguisticTagger *)ltagger
                     keywords:(NSMutableDictionary *)keywords
+
 {
-    const NSUInteger minSize = config.params.minKeywordSize;
+    const NSUInteger minSize = params.minKeywordSize;
     const float textLen = (float)text.length;;
     NSCharacterSet *whites = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSMutableArray *sentences = [NSMutableArray array];
@@ -91,7 +92,8 @@ static inline KxSummarizerSentenceFlags sentencesFlagsForString(NSString *string
          
          NSUInteger totalCount = 0;
          NSArray *words = [KxSummarizerWord buildWords:substring
-                                                config:config
+                                                params:params
+                                             stopwords:stopwords
                                                ltagger:ltagger
                                               keywords:keywords
                                             totalCount:&totalCount];

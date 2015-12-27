@@ -74,6 +74,12 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
     return NSStringFromSummarizerPartOfSpeech(_partOfSpeech);
 }
 
+- (void) resetKeyword
+{
+    _count = 0;
+    _off = _occurred = NO;
+}
+
 @end
 
 //////////
@@ -86,14 +92,14 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
 
 @implementation KxSummarizerWord
 
-+ (NSArray *) buildWords:(NSString *)text
-                  params:(KxSummarizerParams *)params
-               stopwords:(NSSet *)stopwords
-                 ltagger:(NSLinguisticTagger *)ltagger
-                keywords:(NSMutableDictionary *)keywords
-              totalCount:(NSUInteger *)totalCount
++ (void) buildWords:(NSString *)text
+             params:(KxSummarizerParams *)params
+          stopwords:(NSSet *)stopwords
+            ltagger:(NSLinguisticTagger *)ltagger
+           keywords:(NSMutableDictionary *)keywords
+             result:(NSMutableArray *)result
+         totalCount:(NSUInteger *)totalCount
 {
-    NSMutableArray *words = [NSMutableArray array];
     const NSUInteger minSize = params.minKeywordSize;
     NSCharacterSet *uppercaseLetters = [NSCharacterSet uppercaseLetterCharacterSet];
     NSCharacterSet *lowercaseLetters = [NSCharacterSet lowercaseLetterCharacterSet];
@@ -108,7 +114,7 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
                                     NSRange sentenceRange,
                                     BOOL *stop)
      {
-         if (tag.length > minSize &&
+         if (tokenRange.length > minSize &&
              [tag isEqualToString:NSLinguisticTagWord])
          {
              NSString *word = [text substringWithRange:tokenRange];
@@ -175,13 +181,15 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
                  keywords[key] = keyword;
              }
              
-             // add word
-             KxSummarizerWord *p = [KxSummarizerWord new];
-             p.keyword = keyword;
-             p.index = index;
-             p.isUppercase = (NSNotFound == [word rangeOfCharacterFromSet:lowercaseLetters].location);
-             
-             [words addObject:p];
+             if (result) {
+
+                 KxSummarizerWord *p = [KxSummarizerWord new];
+                 p.keyword = keyword;
+                 p.index = index;
+                 p.isUppercase = (NSNotFound == [word rangeOfCharacterFromSet:lowercaseLetters].location);
+                 
+                 [result addObject:p];
+             }
          }
          
          index += 1;
@@ -190,6 +198,24 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
     if (totalCount) {
         *totalCount = index;
     }
+}
+
++ (NSArray *) buildWords:(NSString *)text
+                  params:(KxSummarizerParams *)params
+               stopwords:(NSSet *)stopwords
+                 ltagger:(NSLinguisticTagger *)ltagger
+                keywords:(NSMutableDictionary *)keywords
+              totalCount:(NSUInteger *)totalCount
+{
+    NSMutableArray *words = [NSMutableArray array];
+    
+    [self buildWords:text
+              params:params
+           stopwords:stopwords
+             ltagger:ltagger
+            keywords:keywords
+              result:words
+          totalCount:totalCount];
     
     return words;
 }

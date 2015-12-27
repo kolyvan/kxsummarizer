@@ -88,59 +88,50 @@
                        [[KxDemoSummaryText alloc] initWithTitle:nil content:text2 factor:0.],
                        ];
     
-    NSArray *keywords;
-   
-    NSArray *sentences = [AppDelegate runTexts:texts
-                                      sampling:0.2
-                                        params:[KxSummarizerParams new]
-                                     stopwords:stopwords
-                                      keywords:&keywords
-                                      progress:^BOOL(float progress) {
-                                          NSLog(@"process: %.2f", progress);
-                                          return YES;
-                                      }];
+    [AppDelegate runTexts:texts
+                 sampling:0.2
+                   params:[KxSummarizerParams new]
+                stopwords:stopwords
+                 progress:^(NSArray *sentence) {
+                     NSLog(@"%@", sentence);
+                 }];
     
-    NSLog(@"%@", sentences);
-    NSLog(@"%@", [keywords sortedArrayUsingSelector:@selector(compareByScore:)]);
 }
 
-+ (NSArray *) runTexts:(NSArray *)texts
-              sampling:(float)sampling
-                params:(KxSummarizerParams *)params
-             stopwords:(NSSet *)stopwords
-              keywords:(NSArray **)outKeywords
-              progress:(BOOL(^)(float))progressBlock
++ (void) runTexts:(NSArray *)texts
+         sampling:(float)sampling
+           params:(KxSummarizerParams *)params
+        stopwords:(NSSet *)stopwords
+         progress:(void(^)(NSArray *))progressBlock
 {
-    NSMutableDictionary *keywordCache = [NSMutableDictionary dictionary];
-    NSMutableArray *allSentences = [NSMutableArray arrayWithCapacity:texts.count];
-    
-    NSUInteger contentLen = 0, totalContentLen = 0;
-    for (KxDemoSummaryText *text in texts) {
-        totalContentLen += text.content.length;
-    }
-    
     NSLinguisticTagger *ltagger = [KxSummarizerExtractor linguisticTagger];
+    NSMutableDictionary *keywordCache = [NSMutableDictionary dictionary];
+    NSMutableArray *allSentences = [NSMutableArray array];
     
-    // build keywords
-    
-    float progress = 0;
-    NSUInteger index = 0;
-    
-    for (KxDemoSummaryText *text in texts) {
-        
-        if (text.title.length) {
+    // extra score keywords from titles
+    {
+        for (KxDemoSummaryText *text in texts) {
             
-            NSArray *words = [KxSummarizerWord buildWords:text.title
-                                                   params:params
-                                                stopwords:stopwords
-                                                  ltagger:ltagger
-                                                 keywords:keywordCache
-                                               totalCount:NULL];
-            
-            for (KxSummarizerWord *word in words) {
-                word.keyword.extraFactor = 3.;
+            if (text.title.length) {
+                
+                [KxSummarizerWord buildWords:text.title
+                                      params:params
+                                   stopwords:stopwords
+                                     ltagger:ltagger
+                                    keywords:keywordCache
+                                      result:nil
+                                  totalCount:NULL];
             }
         }
+        
+        for (KxSummarizerKeyword *kw in keywordCache.allValues) {
+            kw.extraFactor = 0.5;
+        }
+        NSLog(@"%@", keywordCache.allValues);
+    }
+    
+    // build sentences
+    for (KxDemoSummaryText *text in texts) {
         
         NSArray *sentences = [KxSummarizerSentence buildSentences:text.content
                                                             range:NSMakeRange(0, text.content.length)
@@ -149,48 +140,62 @@
                                                          excluded:text.title.splitOnSentences
                                                           ltagger:ltagger
                                                          keywords:keywordCache];
+
+        [allSentences addObject:sentences];
+        //NSLog(@"%@", sentences);
+    }
+    
+    // extra score the top of all keywords
+    {
+        NSArray *allKeywords = keywordCache.allValues;
+        [KxSummarizerExtractor scoreKeywords:allKeywords params:params];
+        NSArray *sorted = [allKeywords sortedArrayUsingSelector:@selector(compareByScore:)];
+        for (NSUInteger i = 0; i < MIN(32, sorted.count); ++i) {
+            ((KxSummarizerKeyword *)sorted[i]).extraFactor += 1.;
+        }
+        NSLog(@"%@", [sorted subarrayWithRange:NSMakeRange(0, MIN(32, sorted.count))]);
+    }
+    
+    // score texts
+    NSArray *allKeywords = keywordCache.allValues;
+    const NSUInteger maxKeywordCount = params.maxKeywordCount;
+    
+    NSUInteger index = 0;
+    for (KxDemoSummaryText *text in texts) {
         
-        const float progress0 = progress;
-        contentLen += text.content.length;
-        progress = (float)contentLen / (float)totalContentLen;
+        for (KxSummarizerKeyword *kw in allKeywords) {
+            [kw resetKeyword];
+        }
+        
+        NSArray *sentences = allSentences[index];
         
         for (KxSummarizerSentence *sentence in sentences) {
-            
-            sentence.textNo = index;
-            sentence.progress = progress0 + (progress - progress0) * sentence.progress;
-            
-            if (text.factor) {
-                for (KxSummarizerWord *word in sentence.words) {
-                    word.keyword.extraFactor = text.factor;
-                }
+            for (KxSummarizerWord *word in sentence.words) {
+                word.keyword.count += 1;
             }
         }
         
-        [allSentences addObjectsFromArray:sentences];
+        [KxSummarizerExtractor scoreKeywords:allKeywords params:params];
         
-        if (progressBlock &&
-            !progressBlock(progress))
-        {
-            return nil;
+        if (maxKeywordCount) {
+            
+            // disable low estimated keywords
+            NSArray *sorted = [allKeywords sortedArrayUsingSelector:@selector(compareByScore:)];
+            for (NSUInteger i = maxKeywordCount; i < sorted.count; ++i) {
+                ((KxSummarizerKeyword *)sorted[i]).off = YES;
+            }
+        }
+        
+        [KxSummarizerExtractor scoreSentences:sentences params:params];
+        sentences = [KxSummarizerExtractor topSentences:sentences maxSize:text.content.length * sampling];
+        sentences = [sentences sortedArrayUsingSelector:@selector(compareByLocation:)];
+
+        if (progressBlock) {
+            progressBlock(sentences);
         }
         
         index += 1;
     }
-    
-    // summarize
-    
-    if (allSentences.count) {
-        
-        NSArray *keywords = [KxSummarizerExtractor scoreKeywords:keywordCache.allValues params:params];
-        if (outKeywords) {
-            *outKeywords = keywords;
-        }
-        
-        NSArray *sentences = [KxSummarizerExtractor scoreSentences:allSentences params:params];
-        return [KxSummarizerExtractor topSentences:sentences maxSize:totalContentLen * sampling];
-    }
-    
-    return nil;
 }
 
 @end

@@ -48,11 +48,11 @@
             stopwords:(NSSet *)stopwords
              keywords:(NSArray **)keywords;
 
-+ (NSArray *) scoreKeywords:(NSArray *)keywords
-                     params:(KxSummarizerParams *)params;
++ (void) scoreKeywords:(NSArray *)keywords
+                params:(KxSummarizerParams *)params;
 
-+ (NSArray *) scoreSentences:(NSArray *)sentences
-                      params:(KxSummarizerParams *)params;
++ (void) scoreSentences:(NSArray *)sentences
+                 params:(KxSummarizerParams *)params;
 
 + (NSArray *) topSentences:(NSArray *)sentences
                    maxSize:(NSUInteger)maxSize;

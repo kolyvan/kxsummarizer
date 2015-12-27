@@ -68,7 +68,7 @@
         _keywordScoreFactor         = 10.0f;
         _summationBasedScoreFactor  = 1.0f;
         _densityBasedScoreFactor    = 5.0f;
-        _extraScoreFactor           = 5.0f;
+        _extraScoreFactor           = 1.0f;
         
         _firstLineScoreFactor       = 1.5f;
         _lastLineScoreFactor        = 1.5f;
@@ -78,7 +78,7 @@
         _questionScoreFactor        = 0.7f;
         _colonScoreFactor           = 0.3f;
                 
-        _adjacentKeywordsFactor     = 0.7f;
+        _adjacentKeywordsFactor     = 2.0f;
         _idealSentenceSizeDampFactor= 0.5f;
     }
     return self;

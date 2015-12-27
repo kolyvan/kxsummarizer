@@ -57,12 +57,21 @@ typedef NS_ENUM(UInt8, KxSummarizerPartOfSpeech) {
 @property (readonly, nonatomic) BOOL off;                  // keyword will not used if true
 - (NSComparisonResult) compareByScore:(KxSummarizerKeyword *)other;
 - (NSString *) partOfSpeechName;
+- (void) resetKeyword;
 @end
 
 @interface KxSummarizerWord : NSObject
 @property (readonly, nonatomic, strong) KxSummarizerKeyword *keyword;
 @property (readonly, nonatomic) NSUInteger index;           // position index in sentence
 @property (readonly, nonatomic) BOOL isUppercase;
+
++ (void) buildWords:(NSString *)text
+             params:(KxSummarizerParams *)params
+          stopwords:(NSSet *)stopwords
+            ltagger:(NSLinguisticTagger *)ltagger
+           keywords:(NSMutableDictionary *)keywords
+             result:(NSMutableArray *)result
+         totalCount:(NSUInteger *)totalCount;
 
 + (NSArray *) buildWords:(NSString *)text
                   params:(KxSummarizerParams *)params

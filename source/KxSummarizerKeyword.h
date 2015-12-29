@@ -54,7 +54,6 @@ typedef NS_ENUM(UInt8, KxSummarizerPartOfSpeech) {
 @property (readonly, nonatomic) float score;
 @property (readonly, nonatomic) float extraFactor;         // title, description, etc
 @property (readonly, nonatomic) BOOL occurred;             // already occurred in a text
-@property (readonly, nonatomic) BOOL off;                  // keyword will not used if true
 - (NSComparisonResult) compareByScore:(KxSummarizerKeyword *)other;
 - (NSString *) partOfSpeechName;
 - (void) resetKeyword;

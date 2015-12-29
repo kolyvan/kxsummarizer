@@ -47,7 +47,6 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
 @property (readwrite, nonatomic) float score;
 @property (readwrite, nonatomic) float extraFactor;
 @property (readwrite, nonatomic) BOOL occurred;
-@property (readwrite, nonatomic) BOOL off;
 @end
 
 @implementation KxSummarizerKeyword
@@ -77,7 +76,7 @@ static inline KxSummarizerPartOfSpeech partOfSpeechFromLinguisticTag(NSString *t
 - (void) resetKeyword
 {
     _count = 0;
-    _off = _occurred = NO;
+    _occurred = NO;
 }
 
 @end

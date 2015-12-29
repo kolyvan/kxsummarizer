@@ -95,10 +95,11 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
         
         NSArray *keywords = keywordCache.allValues;
         
-        [KxSummarizerExtractor scoreKeywords:keywords params:params];
+        const NSUInteger keywordCount = [KxSummarizerExtractor scoreKeywords:keywords params:params];
+        const NSUInteger maxKeywordCount = params.maxKeywordCount;
         
-        if (params.maxKeywordCount) {
-            keywords = [KxSummarizerExtractor topKeywords:keywords maxCount:params.maxKeywordCount];
+        if (maxKeywordCount && maxKeywordCount < keywordCount) {
+            keywords = [self topKeywords:keywords maxCount:maxKeywordCount];
         }
         
         if (outKeywords) {
@@ -112,20 +113,22 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
     return nil;
 }
 
-+ (void) scoreKeywords:(NSArray *)keywords
-                params:(KxSummarizerParams *)params
++ (NSUInteger) scoreKeywords:(NSArray *)keywords
+                      params:(KxSummarizerParams *)params
 {
     NSUInteger keywordCount = 0;
+    NSUInteger keywordCountSum = 0;
     
     for (KxSummarizerKeyword *kw in keywords) {
-        if (!kw.off && kw.count) {
-            keywordCount += kw.count;
+        if (kw.count) {
+            keywordCount += 1;
+            keywordCountSum += kw.count;
         }
     }
     
-    if (keywordCount) {
+    if (keywordCountSum) {
         
-        const float keywordFactor = MIN(1.0f, params.keywordScoreFactor / (float)keywordCount);
+        const float keywordFactor = MIN(1.0f, params.keywordScoreFactor / (float)keywordCountSum);
         
         for (KxSummarizerKeyword *kw in keywords) {
             
@@ -135,6 +138,8 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
             }
         }
     }
+    
+    return keywordCount;
 }
 
 + (void) scoreSentences:(NSArray *)sentences
@@ -174,15 +179,10 @@ static inline float scoreOfKeywords(KxSummarizerSentence *, KxSummarizerParams *
                  maxCount:(NSUInteger)maxCount
 {
     keywords = [keywords sortedArrayUsingSelector:@selector(compareByScore:)];
-    
     for (NSUInteger i = maxCount; i < keywords.count; ++i) {
-        ((KxSummarizerKeyword *)keywords[i]).off = YES;
+        ((KxSummarizerKeyword *)keywords[i]).count = 0;
     }
-    
-    if (keywords.count > maxCount) {
-        return [keywords subarrayWithRange:NSMakeRange(0, maxCount)];
-    }
-    return keywords;
+    return [keywords subarrayWithRange:NSMakeRange(0, maxCount)];
 }
 
 + (NSArray *) topSentences:(NSArray *)sentences
@@ -296,7 +296,7 @@ static inline float scoreOfAdjacentKeywords(KxSummarizerSentence *prev,
     for (KxSummarizerWord *w in sentence.words) {
         
         KxSummarizerKeyword *kw = w.keyword;
-        if (!kw.off) {
+        if (kw.count) {
             
             if (prev) {
                 for (KxSummarizerWord *p in prev.words) {
@@ -334,7 +334,7 @@ static inline float scoreOfKeywords(KxSummarizerSentence *sentence,
         
         KxSummarizerKeyword *kw = word.keyword;
         
-        if (!kw.off) {
+        if (kw.count) {
             
             //NSCAssert(kw.count > 0, @"Bugcheck");
             

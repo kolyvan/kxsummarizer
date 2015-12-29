@@ -175,15 +175,25 @@
             }
         }
         
-        [KxSummarizerExtractor scoreKeywords:allKeywords params:params];
+        const NSUInteger keywordCount = [KxSummarizerExtractor scoreKeywords:allKeywords params:params];
         
-        if (maxKeywordCount) {
+        if (maxKeywordCount && maxKeywordCount < keywordCount) {
             
-            // disable low estimated keywords
-            NSArray *sorted = [allKeywords sortedArrayUsingSelector:@selector(compareByScore:)];
-            for (NSUInteger i = maxKeywordCount; i < sorted.count; ++i) {
-                ((KxSummarizerKeyword *)sorted[i]).off = YES;
+            // filter($.count > 0).sort.take(maxCount)
+            
+            NSMutableArray *ma = [NSMutableArray array];
+            for (KxSummarizerKeyword *kw in allKeywords) {
+                if (kw.count) {
+                    [ma addObject:kw];
+                }
             }
+            [ma sortUsingSelector:@selector(compareByScore:)];
+            for (NSUInteger i = maxKeywordCount; i < ma.count; ++i) {
+                ((KxSummarizerKeyword *)ma[i]).count = 0;
+            }
+            
+            //[ma removeObjectsInRange:NSMakeRange(maxKeywordCount, ma.count - maxKeywordCount)];
+            //NSLog(@"%@", ma);
         }
         
         [KxSummarizerExtractor scoreSentences:sentences params:params];

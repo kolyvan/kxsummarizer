@@ -48,8 +48,8 @@
             stopwords:(NSSet *)stopwords
              keywords:(NSArray **)keywords;
 
-+ (void) scoreKeywords:(NSArray *)keywords
-                params:(KxSummarizerParams *)params;
++ (NSUInteger) scoreKeywords:(NSArray *)keywords
+                      params:(KxSummarizerParams *)params;
 
 + (void) scoreSentences:(NSArray *)sentences
                  params:(KxSummarizerParams *)params;

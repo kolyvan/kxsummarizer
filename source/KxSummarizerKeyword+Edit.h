@@ -15,6 +15,5 @@
 @property (readwrite, nonatomic) float score;
 @property (readwrite, nonatomic) float extraFactor;
 @property (readwrite, nonatomic) BOOL occurred;
-@property (readwrite, nonatomic) BOOL off;
 @end
 

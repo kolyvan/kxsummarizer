@@ -24,7 +24,6 @@
 		F9D433151C2BE01B00BAB6AE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9D433141C2BE01B00BAB6AE /* ViewController.m */; };
 		F9D4331A1C2BE01B00BAB6AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9D433191C2BE01B00BAB6AE /* Assets.xcassets */; };
 		F9D4331D1C2BE01B00BAB6AE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9D4331B1C2BE01B00BAB6AE /* LaunchScreen.storyboard */; };
-		F9D433241C2BE09500BAB6AE /* KxSummarizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D432FB1C2BDFE400BAB6AE /* KxSummarizer.framework */; };
 		F9D433251C2BE09D00BAB6AE /* KxSummarizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9D432FB1C2BDFE400BAB6AE /* KxSummarizer.framework */; };
 		F9D433261C2BE09D00BAB6AE /* KxSummarizer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F9D432FB1C2BDFE400BAB6AE /* KxSummarizer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F9D433361C2BE0FA00BAB6AE /* KxSummarizerExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = F9D433341C2BE0FA00BAB6AE /* KxSummarizerExtractor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -106,7 +105,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9D433251C2BE09D00BAB6AE /* KxSummarizer.framework in Frameworks */,
-				F9D433241C2BE09500BAB6AE /* KxSummarizer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,7 +259,7 @@
 		F9D432F21C2BDFE400BAB6AE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Konstantin Bukreev";
 				TargetAttributes = {
 					F9D432FA1C2BDFE400BAB6AE = {
